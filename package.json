@@ -1,0 +1,28 @@
+{
+  "name": "ai-product-research-cro-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Product Research & CRO Lab — a 17-section interactive AI research workflow for building high-converting landing pages",
+  "scripts": {
+    "dev": "node node_modules/next/dist/bin/next dev",
+    "build": "node node_modules/next/dist/bin/next build",
+    "start": "node node_modules/next/dist/bin/next start",
+    "lint": "node node_modules/next/dist/bin/next lint"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.11.6",
+    "lucide-react": "^1.41.0",
+    "next": "^14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "uuid": "^14.0.2",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5",
+    "cross-env": "^10.1.0",
+    "electron": "^44.2.0",
+    "electron-builder": "^26.15.3",
+    "wait-on": "^9.1.0"
+  }
+}
