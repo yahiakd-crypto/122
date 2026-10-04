@@ -927,6 +927,35 @@ export default function ProductResearchBoard() {
     }
   };
 
+  /* ── Export / Download all JSON products ── */
+  const handleExportJson = async () => {
+    try {
+      let dataToExport = products.filter(p => !p.isPlaceholder);
+      // If currently displaying placeholders or empty, fallback to reading saved products from /api/board
+      if (!dataToExport.length) {
+        const res = await fetch("/api/board");
+        if (res.ok) {
+          const { products: saved } = await res.json();
+          const realSaved = (saved || []).filter(p => !p.isPlaceholder);
+          if (realSaved.length > 0) dataToExport = realSaved;
+        }
+      }
+      if (!dataToExport.length) {
+        dataToExport = products;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dataToExport, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `products_export_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    } catch (err) {
+      console.error("Export JSON failed:", err);
+      alert("Failed to export JSON: " + (err.message || "Unknown error"));
+    }
+  };
+
   /* ── Compare helpers ── */
   const toggleCompare = id => {
     setCompareIds(prev => {
@@ -1076,6 +1105,29 @@ export default function ProductResearchBoard() {
               style={{ background: "rgba(255,255,255,0.15)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)", padding: "10px 16px", borderRadius: 10, fontWeight: 600, fontSize: 13, cursor: "pointer", backdropFilter: "blur(4px)", transition: "0.2s", opacity: isAnalyzingImage ? 0.7 : 1 }}
             >
               {isAnalyzingImage ? "Analyzing…" : "📸 Add by Image"}
+            </button>
+            <button
+              onClick={handleExportJson}
+              title="Download all products as JSON file"
+              style={{
+                background: "linear-gradient(135deg, #10b981, #059669)",
+                color: "#fff",
+                border: "none",
+                padding: "10px 18px",
+                borderRadius: 10,
+                fontWeight: 700,
+                fontSize: 13,
+                cursor: "pointer",
+                boxShadow: "0 4px 12px rgba(16,185,129,0.35)",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform = "translateY(-1px)"}
+              onMouseLeave={e => e.currentTarget.style.transform = "none"}
+            >
+              ⬇ Export JSON
             </button>
             <button
               onClick={() => fileRef.current?.click()}

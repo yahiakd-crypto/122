@@ -92,17 +92,52 @@ export default function WinningDigitalProductTable({ data }) {
   const thStyle = { padding: '10px 8px', fontSize: 10, fontWeight: 700, color: '#475569', textTransform: 'uppercase', cursor: 'pointer', lineHeight: 1.2 };
   const tdStyle = { padding: '10px 8px', fontSize: 12, color: '#475569' };
 
+  const handleExportJson = () => {
+    try {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(products, null, 2));
+      const downloadAnchor = document.createElement("a");
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `digital_products_${new Date().toISOString().slice(0, 10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    } catch (e) {
+      console.error("Export JSON failed", e);
+    }
+  };
+
   return (
     <div style={{ background: '#fff', borderRadius: 12, overflow: 'hidden', border: '1px solid #e2e8f0', display: 'flex', flexDirection: 'column' }}>
       <div style={{ padding: 12, borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#f8fafc' }}>
         <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: '#0f172a' }}>Digital Product Opportunities</h3>
-        <input 
-          type="text" 
-          placeholder="Search..." 
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{ padding: '6px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 12, width: 150, outline: 'none' }}
-        />
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <button
+            onClick={handleExportJson}
+            title="Download this table's product data as JSON"
+            style={{
+              padding: '6px 12px',
+              background: 'linear-gradient(135deg, #10b981, #059669)',
+              color: '#fff',
+              border: 'none',
+              borderRadius: 6,
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 4
+            }}
+          >
+            ⬇ Export JSON
+          </button>
+          <input 
+            type="text" 
+            placeholder="Search..." 
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{ padding: '6px 10px', border: '1px solid #cbd5e1', borderRadius: 6, fontSize: 12, width: 150, outline: 'none' }}
+          />
+        </div>
       </div>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', tableLayout: 'auto' }}>
